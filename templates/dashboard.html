@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070b16">
+<title>Dashboard — MONEY PLUS ONE (MP+)</title>
+<style>
+:root{--mint:#62f5bd;--cyan:#66d9ff;--yellow:#ffd43b;--muted:#a7b5ca;--line:rgba(255,255,255,.13)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;overflow-x:hidden;color:#f7fbff;font-family:Inter,system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 50% 30%,rgba(31,104,126,.28),transparent 43%),radial-gradient(ellipse at 90% 80%,rgba(55,55,145,.25),transparent 40%),linear-gradient(145deg,#050914,#0a1427 55%,#080d1b);padding-bottom:112px}
+.wrap{width:min(540px,93%);margin:auto;padding-top:10px}
+header{height:58px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:900}
+.brand-mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#06151a;font-size:13px;font-weight:900;background:linear-gradient(145deg,#a6ffe0,#31c99a)}
+.brand-text span{font-size:0.88rem;display:block}
+.brand-text small{font-size:0.6rem;color:var(--mint);letter-spacing:1.2px}
+.header-badge{font-size:0.68rem;font-weight:800;color:var(--mint);background:rgba(98,245,189,.12);border:1px solid rgba(98,245,189,.35);padding:5px 10px;border-radius:16px}
+
+.top-notif-banner{padding:10px 13px;border-radius:12px;margin-bottom:10px;font-size:0.78rem;font-weight:700;background:rgba(16,185,129,.22);border:1px solid var(--mint);color:#e2fff4}
+.top-notif-banner.error{background:rgba(239,68,68,.22);border-color:#ff6b7a;color:#ffe4e7}
+
+.top-auto-notice{background:linear-gradient(135deg,rgba(20,45,75,.96),rgba(9,20,38,.98));border:1px solid var(--cyan);border-radius:14px;padding:11px 13px;margin-bottom:12px;font-size:0.74rem;color:#e2f1ff;line-height:1.4}
+.top-auto-notice strong{color:var(--mint);display:block;margin-bottom:3px;font-size:0.78rem}
+
+.balance-card{background:linear-gradient(145deg,rgba(35,65,100,.85),rgba(8,20,38,.95));border:1px solid rgba(56,189,248,.3);border-radius:18px;padding:12px 8px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;margin-bottom:12px}
+.bal-box h3{font-size:0.65rem;color:#94a3b8;text-transform:uppercase}
+.bal-box p{font-size:0.9rem;font-weight:900;color:var(--mint);margin-top:2px}
+
+.actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;text-align:center}
+.action-item{background:linear-gradient(145deg,rgba(23,43,64,.88),rgba(11,20,40,.95));border:1px solid rgba(255,255,255,.14);padding:8px 4px;border-radius:12px;color:#fff;font-size:0.68rem;font-weight:800;text-decoration:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.action-ico{font-size:1.25rem;line-height:1.1;display:block}
+
+.sec-head{display:flex;justify-content:space-between;align-items:center;margin:6px 0 10px}
+.sec-head h2{font-size:0.9rem;font-weight:900}
+.sec-head span{font-size:0.68rem;color:var(--mint);font-weight:700}
+
+.machines-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+@media(max-width:420px){.machines-grid{grid-template-columns:repeat(2,1fr)}}
+.machine-card-compact{background:linear-gradient(145deg,rgba(15,35,60,.92),rgba(7,17,31,.96));border:1px solid rgba(56,189,248,.28);border-radius:12px;padding:8px;display:flex;flex-direction:column;justify-content:space-between}
+.mc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:4px}
+.mc-title{font-size:0.72rem;font-weight:900;color:var(--mint)}
+.mc-price{font-size:0.7rem;font-weight:900;color:var(--yellow);background:rgba(255,212,59,.12);border:1px solid rgba(255,212,59,.35);padding:2px 6px;border-radius:6px}
+.mc-details{font-size:0.64rem;color:#cbd5e1;line-height:1.3;margin-bottom:7px}
+.mc-details div{display:flex;justify-content:space-between}
+.btn-buy-compact{width:100%;padding:6px;border:none;border-radius:8px;background:linear-gradient(110deg,#9bffda,#4ad8b0);color:#041711;font-weight:900;font-size:0.68rem;cursor:pointer}
+
+.glass-panel{background:linear-gradient(145deg,rgba(18,35,60,.9),rgba(8,18,34,.96));border:1px solid rgba(56,189,248,.28);border-radius:18px;padding:15px;margin-bottom:14px}
+.amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}
+.amt-btn{background:#ffffff;color:#050b16;border:2px solid #e2e8f0;border-radius:10px;padding:10px 6px;font-weight:900;font-size:0.78rem;cursor:pointer;text-align:center}
+.amt-btn.selected{background:#62f5bd;color:#041711;border-color:#041711}
+
+.bank-card{background:rgba(98,245,189,.07);border:1px solid rgba(98,245,189,.3);border-radius:14px;padding:12px;margin-bottom:14px}
+.bank-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:0.8rem}
+.bank-row:last-child{border-bottom:none}
+.copy-group{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.copy-btn{background:rgba(98,245,189,.18);border:1px solid rgba(98,245,189,.4);color:var(--mint);padding:4px 9px;border-radius:7px;font-size:0.68rem;font-weight:800;cursor:pointer;white-space:nowrap}
+.copy-btn.copied{background:rgba(16,185,129,.35);color:#e2fff4;border-color:#34d399}
+
+.sub-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sub-btn{padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(15,30,52,.85);color:#cbd5e1;font-weight:800;font-size:0.8rem;cursor:pointer}
+.sub-btn.active{background:linear-gradient(110deg,#9bffda,#4ad8b0);color:#041711;border-color:transparent}
+
+.wd-limit-banner{background:rgba(255,212,59,.14);border:1px solid rgba(255,212,59,.5);color:var(--yellow);font-size:0.82rem;font-weight:900;padding:8px 11px;border-radius:10px;margin-bottom:12px;text-align:center}
+
+.field{display:block;margin-bottom:11px;position:relative}
+.field span{display:block;font-size:0.74rem;color:#cbd5e1;font-weight:700;margin-bottom:5px}
+.field input{width:100%;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:#061020;color:#fff;padding:0 12px;font-size:0.84rem}
+
+.bank-picker-btn{width:100%;height:42px;border-radius:10px;border:1px solid rgba(98,245,189,.35);background:#061020;color:#fff;padding:0 12px;font-size:0.84rem;font-weight:700;display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-align:left}
+.bank-picker-btn span.placeholder{color:var(--yellow);font-weight:800}
+
+.bank-dropdown{display:none;position:relative;margin-top:6px;border-radius:12px;border:1px solid rgba(98,245,189,.4);background:#071326;box-shadow:0 14px 28px rgba(0,0,0,.65);padding:8px;z-index:50}
+.bank-dropdown.open{display:block}
+.bank-search-input{width:100%;height:38px;border-radius:8px;border:1px solid rgba(102,217,255,.4);background:#040b17;color:#fff;padding:0 10px;font-size:0.82rem;margin-bottom:8px;outline:none}
+.bank-search-input:focus{border-color:var(--mint)}
+.bank-list-box{max-height:205px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.bank-option{width:100%;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:rgba(255,255,255,.03);color:#f7fbff;font-size:0.8rem;font-weight:700;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.bank-option:hover,.bank-option.selected{background:rgba(98,245,189,.16);border-color:rgba(98,245,189,.45);color:var(--mint)}
+
+.btn-submit-green{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(110deg,#62f5bd,#31c99a);color:#041711;font-weight:900;font-size:0.86rem;cursor:pointer}
+
+.hist-item{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;margin-bottom:7px;border-radius:11px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);font-size:0.78rem}
+.hist-item:last-child{margin-bottom:0}
+.hist-item.hist-approved{background:rgba(16,185,129,.14);border-color:rgba(52,211,153,.45)}
+.hist-item.hist-rejected{background:rgba(239,68,68,.15);border-color:rgba(248,113,113,.45)}
+
+.status-badge{padding:3px 8px;border-radius:10px;font-size:0.65rem;font-weight:800;text-transform:uppercase;background:rgba(255,255,255,.08);color:#e2e8f0}
+.status-badge.approved{background:rgba(16,185,129,.28);color:#6ee7b7;border:1px solid #10b981}
+.status-badge.rejected{background:rgba(239,68,68,.28);color:#fca5a5;border:1px solid #ef4444}
+
+.online-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:12px;font-size:0.66rem;font-weight:900;color:#86efac;background:rgba(16,185,129,.18);border:1px solid rgba(34,197,94,.5)}
+.online-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e}
+
+.mine-menu-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:12px 14px;border-radius:14px;background:rgba(20,38,65,.92);border:1px solid rgba(56,189,248,.25);color:#fff;font-size:0.84rem;font-weight:800;cursor:pointer;margin-bottom:8px}
+.mine-menu-left{display:flex;align-items:center;gap:9px}
+.mine-ico{font-size:1.25rem;line-height:1}
+
+.dubai-card{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(98,245,189,.35);margin-bottom:12px;background:linear-gradient(135deg,#0c223d,#061121)}
+.dubai-visual{height:155px;background:linear-gradient(to bottom,rgba(5,12,24,.25),rgba(5,12,24,.92)),url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=900&q=80') center/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:14px}
+.dubai-hq-tag{display:inline-block;width:fit-content;background:rgba(98,245,189,.2);border:1px solid var(--mint);color:var(--mint);font-size:0.64rem;font-weight:900;padding:3px 9px;border-radius:20px;margin-bottom:5px;letter-spacing:1px}
+.dubai-visual h3{font-size:1.05rem;font-weight:900;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.dubai-visual p{font-size:0.72rem;color:#cbd5e1}
+
+.info-list-clean{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.info-list-clean li{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:9px 11px;font-size:0.78rem;color:#dbeafe;line-height:1.45}
+.info-list-clean li strong{color:var(--mint)}
+
+.tab-section{display:none}
+.tab-section.active{display:block}
+
+.nav-bar{position:fixed;bottom:0;left:0;right:0;min-height:76px;background:linear-gradient(180deg,rgba(12,28,52,.98),rgba(6,13,26,.99));backdrop-filter:blur(20px);border-top:1px solid rgba(98,245,189,.32);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;gap:4px;padding:9px 6px 14px;z-index:100;box-shadow:0 -12px 32px rgba(0,0,0,.72)}
+.nav-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);color:#a7b5ca;font-size:0.8rem;text-align:center;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 2px;border-radius:12px;transition:.2s}
+.nav-item .nav-ico{font-size:1.55rem;line-height:1.15;display:block}
+.nav-item.active{color:var(--mint);background:rgba(98,245,189,.14);border-color:rgba(98,245,189,.45);text-shadow:0 0 12px rgba(98,245,189,.4)}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <div class="brand">
+            <div class="brand-mark">MP+</div>
+            <div class="brand-text">
+                <span>MONEY PLUS ONE</span>
+                <small>COMPUTERS & PHONES HUB</small>
+            </div>
+        </div>
+        <span class="header-badge">ID: MP-{{ g.user['id'] }}</span>
+    </header>
+
+    {% for n in top_notifications %}
+    <div class="top-notif-banner {{ n['category'] }}">{{ n['message'] }}</div>
+    {% endfor %}
+
+    {% if show_notice %}
+    <div id="topSecurityNotice" class="top-auto-notice">
+        <strong>Platform Rules & Security Notice</strong>
+        Welcome Bonus: ₦500 on signup. Daily Check-In: ₦100 every 24 hours. Referral Commission: ₦1,000 when an invited user deposits and invests in a machine. Deposited funds require machine investment before withdrawal. Min Deposit: ₦3,000 | Min Withdrawal: ₦1,500 | Max Withdrawal: ₦1,000,000 | Max 2 withdrawals/day. Never share your password.
+    </div>
+    {% endif %}
+
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-section active">
+        <div class="balance-card">
+            <div class="bal-box"><h3>Balance</h3><p>₦{{ "{:,.2f}".format(g.user['balance']) }}</p></div>
+            <div class="bal-box"><h3>Deposit</h3><p>₦{{ "{:,.2f}".format(g.user['total_deposit']) }}</p></div>
+            <div class="bal-box"><h3>Total Income</h3><p>₦{{ "{:,.2f}".format(g.user['total_income']) }}</p></div>
+        </div>
+
+        <div class="actions-grid">
+            <button type="button" class="action-item" onclick="switchTab('wallet')"><span class="action-ico">💳</span><span>Deposit</span></button>
+            <button type="button" class="action-item" onclick="openWithdrawTab()"><span class="action-ico">💸</span><span>Withdraw</span></button>
+            <a href="{{ settings.service_link }}" target="_blank" rel="noopener noreferrer" class="action-item"><span class="action-ico">🎧</span><span>Customer Care</span></a>
+            <a href="{{ settings.group_link }}" target="_blank" rel="noopener noreferrer" class="action-item"><span class="action-ico">✈️</span><span>Group</span></a>
+        </div>
+
+        <div style="margin-bottom:12px">
+            <form action="{{ url_for('daily_checkin') }}" method="POST">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="action-item" style="width:100%;flex-direction:row;gap:8px;padding:9px 12px;border-color:rgba(255,212,59,.4)">
+                    <span class="action-ico">🗓️</span>
+                    <span>Daily Check-In (₦{{ settings.daily_check_in }})</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="sec-head">
+            <h2>MP+ Machines (90 Days)</h2>
+            <span>Auto Hourly</span>
+        </div>
+
+        <div class="machines-grid">
+            {% for m in machines %}
+            <div class="machine-card-compact">
+                <div class="mc-header">
+                    <span class="mc-title">{{ m.name }}</span>
+                    <span class="mc-price">₦{{ "{:,}".format(m.price) }}</span>
+                </div>
+                <div class="mc-details">
+                    <div><span>Hourly:</span><strong>₦{{ "{:,.2f}".format(m.hourly_profit) }}</strong></div>
+                    <div><span>Daily:</span><strong>₦{{ "{:,}".format(m.daily_profit) }}</strong></div>
+                    <div><span>Days:</span><strong>{{ m.days }}d</strong></div>
+                    <div><span>Total:</span><strong>₦{{ "{:,}".format(m.total_profit) }}</strong></div>
+                </div>
+                <form action="{{ url_for('buy_machine', machine_id=m.id) }}" method="POST">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn-buy-compact">Buy</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- WALLET TAB -->
+    <div id="tab-wallet" class="tab-section">
+        <div class="sec-head">
+            <h2>Wallet</h2>
+            <span>₦{{ "{:,.2f}".format(g.user['balance']) }}</span>
+        </div>
+
+        <div class="sub-switch">
+            <button type="button" class="sub-btn active" id="btn-sub-deposit" onclick="switchWalletMode('deposit')">Deposit</button>
+            <button type="button" class="sub-btn" id="btn-sub-withdraw" onclick="switchWalletMode('withdraw')">Withdraw</button>
+        </div>
+
+        <div id="wallet-deposit-box" class="glass-panel">
+            <div id="deposit-step-1">
+                <p style="font-size:0.8rem;color:#cbd5e1;margin-bottom:8px">Select deposit amount:</p>
+                <div class="amount-grid">
+                    {% for amt in deposit_amounts %}
+                    <button type="button" class="amt-btn" onclick="selectDepositAmount({{ amt }}, this)">₦{{ "{:,}".format(amt) }}</button>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn-submit-green" onclick="goToDepositStep2()">Next</button>
+            </div>
+
+            <div id="deposit-step-2" style="display:none">
+                <p style="font-size:0.8rem;color:#cbd5e1;margin-bottom:10px">Selected Amount: <strong id="selectedAmtLabel" style="color:var(--mint)">₦0</strong>. Transfer to the bank account below:</p>
+                <div class="bank-card">
+                    <div class="bank-row"><span>Bank Name:</span><strong>{{ settings.bank_name }}</strong></div>
+                    <div class="bank-row">
+                        <span>Account Number:</span>
+                        <div class="copy-group"><strong id="accNum">{{ settings.account_number }}</strong><button type="button" class="copy-btn" onclick="copyText('accNum', this)">Copy</button></div>
+                    </div>
+                    <div class="bank-row"><span>Account Name:</span><strong>{{ settings.account_name }}</strong></div>
+                </div>
+
+                <form action="{{ url_for('submit_deposit') }}" method="POST">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" id="finalDepositAmount" name="amount" value="3000">
+                    <button type="submit" class="btn-submit-green">I Have Sent Money</button>
+                </form>
+                <button type="button" class="sub-btn" style="width:100%;margin-top:8px" onclick="backToDepositStep1()">Change Amount</button>
+            </div>
+        </div>
+
+        <div id="wallet-withdraw-box" class="glass-panel" style="display:none">
+            <div class="wd-limit-banner">Min: ₦1,500 · Max: ₦1,000,000 · Max 2 per day</div>
+            <form action="{{ url_for('submit_withdraw') }}" method="POST" onsubmit="return validateWithdrawBank()">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                <label class="field">
+                    <span>Amount (₦)</span>
+                    <input type="number" name="amount" min="1500" max="1000000" step="any" required placeholder="1500 - 1000000">
+                </label>
+                <div class="field">
+                    <span>Bank Name</span>
+                    <input type="hidden" id="bankNameInput" name="bank_name" value="">
+                    <button type="button" class="bank-picker-btn" id="bankPickerBtn" onclick="toggleBankDropdown()">
+                        <span id="bankPickerLabel" class="placeholder">Choose Bank</span>
+                        <span>▼</span>
+                    </button>
+                    <div class="bank-dropdown" id="bankDropdown">
+                        <input type="text" class="bank-search-input" id="bankSearchInput" placeholder="Search bank or wallet (e.g. OPay, Moniepoint, PalmPay)..." oninput="filterBanks()">
+                        <div class="bank-list-box" id="bankListBox"></div>
+                    </div>
+                </div>
+                <label class="field">
+                    <span>Account Number</span>
+                    <input type="text" name="account_number" maxlength="15" required placeholder="Account number">
+                </label>
+                <label class="field">
+                    <span>Account Name</span>
+                    <input type="text" name="account_name" required placeholder="Account holder name">
+                </label>
+                <button type="submit" class="btn-submit-green">Submit Withdrawal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- INCOME TAB -->
+    <div id="tab-income" class="tab-section">
+        <div class="sec-head">
+            <h2>Active Machines</h2>
+            <span>90 Days</span>
+        </div>
+        {% for um in my_machines %}
+        <div class="glass-panel" style="padding:12px;border-color:rgba(34,197,94,.4)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <strong>{{ um['machine_name'] }}</strong>
+                <span class="online-pill"><span class="online-dot"></span><span>ONLINE</span></span>
+            </div>
+            <div style="font-size:0.78rem;color:#cbd5e1">Hourly: ₦{{ "{:,.2f}".format(um['hourly_profit']) }} · Hours: {{ um['hours_credited'] }}/{{ um['max_hours'] }} · Total: ₦{{ "{:,.0f}".format(um['total_profit']) }}</div>
+        </div>
+        {% else %}
+        <div class="glass-panel"><p style="font-size:0.82rem;color:#94a3b8">No active machines yet.</p></div>
+        {% endfor %}
+    </div>
+
+    <!-- TEAM TAB -->
+    <div id="tab-team" class="tab-section">
+        <div class="sec-head">
+            <h2>Team & Referral</h2>
+            <span>₦1,000 Commission</span>
+        </div>
+        <div class="glass-panel">
+            <p style="font-size:0.78rem;color:#cbd5e1;margin-bottom:10px;line-height:1.45">
+                How to earn ₦1,000 referral commission: Share your referral link or code. Your commission is credited to your balance after your invited partner deposits and invests in a machine.
+            </p>
+            <div class="bank-card">
+                <div class="bank-row">
+                    <span>Referral Code:</span>
+                    <div class="copy-group"><strong id="refCode">{{ g.user['referral_code'] }}</strong><button type="button" class="copy-btn" onclick="copyText('refCode', this)">Copy</button></div>
+                </div>
+                <div class="bank-row">
+                    <span>Referral Link:</span>
+                    <div class="copy-group"><strong id="refLink" style="font-size:0.7rem;word-break:break-all">{{ request.host_url }}register?ref={{ g.user['referral_code'] }}</strong><button type="button" class="copy-btn" onclick="copyText('refLink', this)">Copy</button></div>
+                </div>
+            </div>
+            {% for tm in team_members %}
+            <div class="hist-item">
+                <div><strong>{{ tm['full_name'] }}</strong><div style="font-size:0.68rem;color:#94a3b8">{{ (tm['created_at'] or '')[:10] }}</div></div>
+                <span style="font-size:0.74rem;color:var(--mint)">{{ 'Invested' if tm['has_invested'] else 'Pending Investment' }}</span>
+            </div>
+            {% else %}
+            <p style="font-size:0.78rem;color:#94a3b8">No invited members yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- MINE TAB -->
+    <div id="tab-mine" class="tab-section">
+        <div class="sec-head">
+            <h2>Mine</h2>
+            <span>ID: MP-{{ g.user['id'] }}</span>
+        </div>
+        <div class="glass-panel">
+            <div class="bank-row"><span>Full Name:</span><strong>{{ g.user['full_name'] }}</strong></div>
+            <div class="bank-row"><span>Email:</span><strong>{{ g.user['email'] }}</strong></div>
+            {% if g.user['phone_number'] %}
+            <div class="bank-row"><span>Phone Number:</span><strong>{{ g.user['phone_number'] }}</strong></div>
+            {% endif %}
+            <div class="bank-row"><span>Balance:</span><strong>₦{{ "{:,.2f}".format(g.user['balance']) }}</strong></div>
+        </div>
+
+        <button type="button" class="mine-menu-btn" onclick="toggleMinePanel('mine-dep-hist')"><span class="mine-menu-left"><span class="mine-ico">📥</span><span>Deposit History</span></span><span>▼</span></button>
+        <div id="mine-dep-hist" class="glass-panel" style="display:none">
+            {% for d in my_deposits %}
+            <div class="hist-item {% if d['status'] == 'approved' %}hist-approved{% elif d['status'] == 'rejected' %}hist-rejected{% endif %}">
+                <div><strong>₦{{ "{:,.2f}".format(d['amount']) }}</strong><div style="font-size:0.68rem;color:#cbd5e1">{{ d['created_at'] }}</div></div>
+                <span class="status-badge {{ d['status'] }}">{{ d['status'] }}</span>
+            </div>
+            {% else %}
+            <p style="font-size:0.78rem;color:#94a3b8">No deposits yet.</p>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="mine-menu-btn" onclick="toggleMinePanel('mine-wd-hist')"><span class="mine-menu-left"><span class="mine-ico">📤</span><span>Withdrawal History</span></span><span>▼</span></button>
+        <div id="mine-wd-hist" class="glass-panel" style="display:none">
+            {% for w in my_withdrawals %}
+            <div class="hist-item {% if w['status'] == 'approved' %}hist-approved{% elif w['status'] == 'rejected' %}hist-rejected{% endif %}">
+                <div><strong>₦{{ "{:,.2f}".format(w['amount']) }}</strong> · {{ w['bank_name'] }}<div style="font-size:0.68rem;color:#cbd5e1">{{ w['created_at'] }}</div></div>
+                <span class="status-badge {{ w['status'] }}">{{ w['status'] }}</span>
+            </div>
+            {% else %}
+            <p style="font-size:0.78rem;color:#94a3b8">No withdrawals yet.</p>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="mine-menu-btn" onclick="toggleMinePanel('mine-company-about')"><span class="mine-menu-left"><span class="mine-ico">🏢</span><span>Company About</span></span><span>▼</span></button>
+        <div id="mine-company-about" class="glass-panel" style="display:none">
+            <div class="dubai-card">
+                <div class="dubai-visual">
+                    <span class="dubai-hq-tag">🇦🇪 DUBAI INTERNATIONAL HUB</span>
+                    <h3>MONEY PLUS ONE (MP+)</h3>
+                    <p>Global Electronics, Computers & Mobile Tech Trading</p>
+                </div>
+            </div>
+            <p style="font-size:0.8rem;color:#dbeafe;line-height:1.6">
+                <strong>Money Plus One (MP+)</strong> is a global commercial trading enterprise headquartered in <strong>Dubai, UAE</strong>, focused on sourcing and trading quality Computers (Laptops & Desktops), Smartphones, and Mobile Tech Accessories with full transparency and reliability.
+            </p>
+        </div>
+
+        <button type="button" class="mine-menu-btn" onclick="toggleMinePanel('mine-bonuses-referral')"><span class="mine-menu-left"><span class="mine-ico">🎁</span><span>Bonuses & Referral Guide</span></span><span>▼</span></button>
+        <div id="mine-bonuses-referral" class="glass-panel" style="display:none">
+            <ul class="info-list-clean">
+                <li><strong>Welcome Bonus (₦500):</strong> Credited automatically to your account upon completing registration.</li>
+                <li><strong>Daily Check-In (₦100):</strong> Claimable once every 24 hours directly from the Home tab.</li>
+                <li><strong>Referral Commission (₦1,000):</strong> Share your referral code or link from the Team tab. Once your invited partner deposits and invests in a machine, ₦1,000 is credited to your balance.</li>
+            </ul>
+        </div>
+
+        <button type="button" class="mine-menu-btn" onclick="toggleMinePanel('mine-trust-trading')"><span class="mine-menu-left"><span class="mine-ico">🤝</span><span>Honesty, Trust & Fund Management</span></span><span>▼</span></button>
+        <div id="mine-trust-trading" class="glass-panel" style="display:none">
+            <p style="font-size:0.8rem;color:#dbeafe;line-height:1.6;margin-bottom:10px">
+                <strong>How We Manage Investor Funds Through Buying & Selling Goods:</strong> Every partner's capital is handled with honesty, integrity, and strict accountability. We deploy funds into real commercial trading — purchasing high-demand computers, smartphones, and tech accessories at wholesale rates and selling them into active markets, sharing returns transparently on an hourly and daily basis.
+            </p>
+            <div style="background:rgba(98,245,189,.1);border:1px solid rgba(98,245,189,.35);padding:11px;border-radius:12px;font-size:0.78rem;color:#b8ffe4;line-height:1.5">
+                <strong>Our Promise of Trust & Accountability:</strong> We value your trust above all else and work diligently to protect your funds and honor every legitimate earning fairly.
+            </div>
+        </div>
+
+        <form action="{{ url_for('logout') }}" method="POST" style="margin-top:12px">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" style="width:100%;padding:12px;background:linear-gradient(145deg,#fb5555,#a90e27);color:#fff;border:none;border-radius:12px;font-weight:900;cursor:pointer">Sign Out</button>
+        </form>
+    </div>
+</div>
+
+<div class="nav-bar">
+    <button type="button" class="nav-item active" id="nav-home" onclick="switchTab('home')"><span class="nav-ico">🏠</span><span>Home</span></button>
+    <button type="button" class="nav-item" id="nav-income" onclick="switchTab('income')"><span class="nav-ico">📈</span><span>Income</span></button>
+    <button type="button" class="nav-item" id="nav-team" onclick="switchTab('team')"><span class="nav-ico">👥</span><span>Team</span></button>
+    <button type="button" class="nav-item" id="nav-wallet" onclick="switchTab('wallet')"><span class="nav-ico">👛</span><span>Wallet</span></button>
+    <button type="button" class="nav-item" id="nav-mine" onclick="switchTab('mine')"><span class="nav-ico">👤</span><span>Mine</span></button>
+</div>
+
+<script>
+const NIGERIA_BANKS_30 = [
+    { name: "OPay", type: "Wallet" },
+    { name: "Moniepoint", type: "Wallet" },
+    { name: "PalmPay", type: "Wallet" },
+    { name: "Kuda Bank", type: "Digital Bank" },
+    { name: "Access Bank", type: "Bank" },
+    { name: "GTBank (Guaranty Trust Bank)", type: "Bank" },
+    { name: "Zenith Bank", type: "Bank" },
+    { name: "First Bank of Nigeria", type: "Bank" },
+    { name: "UBA (United Bank for Africa)", type: "Bank" },
+    { name: "Fidelity Bank", type: "Bank" },
+    { name: "Stanbic IBTC Bank", type: "Bank" },
+    { name: "FCMB (First City Monument Bank)", type: "Bank" },
+    { name: "Sterling Bank", type: "Bank" },
+    { name: "Wema Bank", type: "Bank" },
+    { name: "ALAT by Wema", type: "Digital Bank" },
+    { name: "Union Bank", type: "Bank" },
+    { name: "Polaris Bank", type: "Bank" },
+    { name: "Jaiz Bank", type: "Bank" },
+    { name: "Providus Bank", type: "Bank" },
+    { name: "Titan Trust Bank", type: "Bank" },
+    { name: "Globus Bank", type: "Bank" },
+    { name: "Lotus Bank", type: "Bank" },
+    { name: "TAJBank", type: "Bank" },
+    { name: "SunTrust Bank", type: "Bank" },
+    { name: "Keystone Bank", type: "Bank" },
+    { name: "Citibank Nigeria", type: "Bank" },
+    { name: "Standard Chartered Bank", type: "Bank" },
+    { name: "Paga", type: "Wallet" },
+    { name: "FairMoney", type: "Wallet" },
+    { name: "VFD Microfinance Bank", type: "Digital Bank" }
+];
+
+let chosenDepositAmount = 3000;
+
+function escapeAttr(str) {
+    return String(str).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function renderBankOptions(filterText = "") {
+    const box = document.getElementById("bankListBox");
+    const selectedVal = document.getElementById("bankNameInput").value;
+    const q = filterText.trim().toLowerCase();
+    const matches = NIGERIA_BANKS_30.filter(b => b.name.toLowerCase().includes(q) || b.type.toLowerCase().includes(q));
+
+    if (!matches.length) {
+        box.innerHTML = '<div style="padding:10px;text-align:center;color:#94a3b8;font-size:0.78rem">No matching bank or wallet found.</div>';
+        return;
+    }
+
+    box.innerHTML = matches.map(b => {
+        const isSel = selectedVal === b.name ? "selected" : "";
+        return `<button type="button" class="bank-option ${isSel}" data-bank="${escapeAttr(b.name)}" onclick="selectBankFromBtn(this)">
+            <span>${escapeAttr(b.name)}</span>
+            <span style="font-size:0.65rem;opacity:.8">${escapeAttr(b.type)}</span>
+        </button>`;
+    }).join("");
+}
+
+function toggleBankDropdown() {
+    const dd = document.getElementById("bankDropdown");
+    const isOpen = dd.classList.toggle("open");
+    if (isOpen) {
+        const searchInp = document.getElementById("bankSearchInput");
+        searchInp.value = "";
+        renderBankOptions("");
+        setTimeout(() => searchInp.focus(), 40);
+    }
+}
+
+function filterBanks() {
+    const q = document.getElementById("bankSearchInput").value;
+    renderBankOptions(q);
+}
+
+function selectBankFromBtn(btnEl) {
+    const bankName = btnEl.getAttribute("data-bank") || "";
+    document.getElementById("bankNameInput").value = bankName;
+    const lbl = document.getElementById("bankPickerLabel");
+    lbl.innerText = bankName;
+    lbl.classList.remove("placeholder");
+    document.getElementById("bankDropdown").classList.remove("open");
+    renderBankOptions(document.getElementById("bankSearchInput").value);
+}
+
+function validateWithdrawBank() {
+    const val = document.getElementById("bankNameInput").value.trim();
+    if (!val) {
+        alert("Please tap Choose Bank and select a bank or wallet.");
+        document.getElementById("bankDropdown").classList.add("open");
+        document.getElementById("bankSearchInput").focus();
+        return false;
+    }
+    return true;
+}
+
+function selectDepositAmount(amt, btnEl) {
+    chosenDepositAmount = amt;
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+    if (btnEl) btnEl.classList.add('selected');
+}
+
+function goToDepositStep2() {
+    document.getElementById('finalDepositAmount').value = chosenDepositAmount;
+    document.getElementById('selectedAmtLabel').innerText = '₦' + Number(chosenDepositAmount).toLocaleString();
+    document.getElementById('deposit-step-1').style.display = 'none';
+    document.getElementById('deposit-step-2').style.display = 'block';
+}
+
+function backToDepositStep1() {
+    document.getElementById('deposit-step-2').style.display = 'none';
+    document.getElementById('deposit-step-1').style.display = 'block';
+}
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    const t = document.getElementById('tab-' + tabName);
+    if (t) t.classList.add('active');
+    const n = document.getElementById('nav-' + tabName);
+    if (n) n.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function switchWalletMode(mode) {
+    document.getElementById('wallet-deposit-box').style.display = mode === 'deposit' ? 'block' : 'none';
+    document.getElementById('wallet-withdraw-box').style.display = mode === 'withdraw' ? 'block' : 'none';
+    document.getElementById('btn-sub-deposit').classList.toggle('active', mode === 'deposit');
+    document.getElementById('btn-sub-withdraw').classList.toggle('active', mode === 'withdraw');
+}
+
+function openWithdrawTab() {
+    switchTab('wallet');
+    switchWalletMode('withdraw');
+}
+
+function toggleMinePanel(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+}
+
+function fallbackCopyText(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-9999px";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+        ta.setSelectionRange(0, ta.value.length);
+    } catch (e) {}
+    let ok = false;
+    try {
+        ok = document.execCommand("copy");
+    } catch (e) {
+        ok = false;
+    }
+    document.body.removeChild(ta);
+    return ok;
+}
+
+function markCopiedButton(btnEl) {
+    if (!btnEl) return;
+    const orig = btnEl.innerText;
+    btnEl.innerText = "Copied";
+    btnEl.classList.add("copied");
+    setTimeout(() => {
+        btnEl.innerText = orig;
+        btnEl.classList.remove("copied");
+    }, 1500);
+}
+
+function copyText(id, btnEl) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const text = target.innerText.trim();
+    if (!text) return;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+            markCopiedButton(btnEl);
+        }).catch(() => {
+            if (fallbackCopyText(text)) {
+                markCopiedButton(btnEl);
+            } else {
+                window.prompt("Copy link manually:", text);
+            }
+        });
+    } else {
+        if (fallbackCopyText(text)) {
+            markCopiedButton(btnEl);
+        } else {
+            window.prompt("Copy link manually:", text);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderBankOptions("");
+
+    const notice = document.getElementById('topSecurityNotice');
+    if (notice) {
+        setTimeout(() => {
+            notice.style.display = 'none';
+        }, 5000);
+    }
+    const firstAmt = document.querySelector('.amt-btn');
+    if (firstAmt) firstAmt.classList.add('selected');
+
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab && document.getElementById('tab-' + tab)) switchTab(tab);
+});
+</script>
+</body>
+</html>

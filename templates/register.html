@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - Money Plus One</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #070d19; color: #f8fafc; margin: 0; padding: 20px; }
+    .card { max-width: 440px; margin: 20px auto; background: #0f1b2d; border: 1px solid #1e3352; border-radius: 14px; padding: 24px; }
+    label { display: block; margin-bottom: 6px; font-size: 14px; color: #cbd5e1; }
+    .input-box { width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 10px; border: 1px solid #284166; background: #132238; color: #ffffff; font-size: 15px; }
+    .pw-wrap { position: relative; display: flex; align-items: center; }
+    .pw-wrap .input-box { padding-right: 68px; }
+    .pw-toggle { position: absolute; right: 10px; background: #1c3150; color: #e2e8f0; border: 1px solid #35588a; border-radius: 7px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
+    .pw-toggle:hover { background: #26426b; }
+    .btn { width: 100%; margin-top: 18px; padding: 12px; border: none; border-radius: 10px; background: #34d399; color: #052e16; font-weight: bold; font-size: 15px; cursor: pointer; }
+    .field-group { margin-bottom: 14px; }
+    .flash { padding: 10px 12px; border-radius: 8px; margin-bottom: 14px; background: #3f151b; color: #fecdd3; }
+    a { color: #34d399; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Create Account</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="flash">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST" action="{{ url_for('register') }}">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
+      <div class="field-group">
+        <label for="reg_name">Full Name</label>
+        <input id="reg_name" class="input-box" type="text" name="full_name" placeholder="Enter your full name" required />
+      </div>
+      <div class="field-group">
+        <label for="reg_email">Email or Phone Number</label>
+        <input id="reg_email" class="input-box" type="text" name="email" placeholder="you@example.com or 08012345678" required />
+      </div>
+      <div class="field-group">
+        <label for="reg_password">Password</label>
+        <div class="pw-wrap">
+          <input id="reg_password" class="input-box" type="password" name="password" placeholder="At least 8 characters" required />
+          <button type="button" class="pw-toggle" data-target="reg_password" aria-label="Show password">Show</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label for="reg_confirm">Confirm Password</label>
+        <div class="pw-wrap">
+          <input id="reg_confirm" class="input-box" type="password" name="confirm_password" placeholder="Repeat password" required />
+          <button type="button" class="pw-toggle" data-target="reg_confirm" aria-label="Show password">Show</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label for="reg_ref">Referral Code (Optional)</label>
+        <input id="reg_ref" class="input-box" type="text" name="ref_code" value="{{ ref_code or '' }}" placeholder="Optional referral code" />
+      </div>
+      <button type="submit" class="btn">Create Account</button>
+    </form>
+    <p style="margin-top:16px; font-size:14px; text-align:center;">
+      Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+    </p>
+  </div>
+  <script>
+    document.querySelectorAll(".pw-toggle").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var input = document.getElementById(btn.getAttribute("data-target"));
+        if (!input) return;
+        var isHidden = input.type === "password";
+        input.type = isHidden ? "text" : "password";
+        btn.textContent = isHidden ? "Hide" : "Show";
+        btn.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+      });
+    });
+  </script>
+</body>
+</html>
